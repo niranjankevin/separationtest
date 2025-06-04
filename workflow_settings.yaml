@@ -1,0 +1,5 @@
+defaultProject: nbalaji-477-20250527181051
+defaultLocation: US
+defaultDataset: dataform
+defaultAssertionDataset: dataform_assertions
+dataformCoreVersion: 3.0.0

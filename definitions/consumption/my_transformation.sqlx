@@ -1,0 +1,11 @@
+config {
+  type: "table",
+  schema: "analytics_dataset",
+  name: "my_transformed_table"
+}
+
+SELECT
+  customer_since_date, count(*) as num_customer
+FROM
+  `nbalaji-477-20250527181051.rideshare_llm_enriched.customer`
+  group by 1
