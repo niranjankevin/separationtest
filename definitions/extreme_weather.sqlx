@@ -1,6 +1,6 @@
 config {
   type: "table", 
-  schema: dataform.projectConfig.vars.weather_export_dataset
+  schema: "us_dataset"
 }
 
 SELECT
