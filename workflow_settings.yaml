@@ -7,5 +7,5 @@ dataformCoreVersion: 3.0.0
     "weather_export_project": "preston-307021",
     "weather_action_dataset": "action_dataset",
     "weather_export_dataset": "us_dataset",
-    "weather_export_table_suffix": "_*"
+    "weather_export_table_suffix": "_v1"
     } 
