@@ -1,7 +1,6 @@
 config {
   type: "table", 
-  schema: dataform.projectConfig.vars.weather_export_dataset,
-  name: 'events'
+  schema: dataform.projectConfig.vars.weather_export_dataset
 }
 
 SELECT
