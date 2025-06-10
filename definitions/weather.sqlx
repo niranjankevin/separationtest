@@ -1,0 +1,8 @@
+config {
+    type: "declaration",
+    database: constants.dflt_project,
+    schema: constants.insight_ds,
+    name: "vw_unified_FactOrdersInsights",
+    description: "Existing prj-dbi-prd-1.ds_dbi_insights.vw_unified_FactOrdersInsight"
+}
+

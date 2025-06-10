@@ -1,0 +1,45 @@
+config {
+    type: "incremental",
+    tags: ["daily_weather_reports_incremental"], 
+    database: constants.dflt_project,
+    schema: constants.insight_ds,
+    name: "weather_aggregation"
+}
+
+
+
+pre_operations {
+    -- For the initial run, use "Run with Full refresh" for case where the table does not exist, the DELETE will be skipped.
+    ${
+        when(incremental(), `
+        DELETE FROM ${self()}
+        WHERE
+          DATE(date) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL ${dataform.projectConfig.vars.weather_data_lookback_days} DAY)
+          AND CURRENT_DATE();
+      `)
+    }
+}
+
+-- For the initial run, use "Run with Full refresh" where the incremental logic will be skipped 
+SELECT
+  DATE_TRUNC(DATE(year, month, day), MONTH) AS date,
+  COUNT(*) AS extreme_weather_count
+FROM
+  `bigquery-public-data.samples.gsod`
+WHERE
+  ( snow = TRUE
+    OR hail = TRUE
+    OR thunder = TRUE
+    OR tornado = TRUE )
+  AND year >= 2007
+  ${
+      when(incremental(), `
+        AND DATE_TRUNC(DATE(year, month, day), MONTH) > (SELECT MAX(date) FROM ${self()})
+      `)
+  }
+GROUP BY
+  date
+ORDER BY
+  date
+
+

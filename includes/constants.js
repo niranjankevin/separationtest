@@ -12,4 +12,8 @@ module.exports = {
     RAW_DATASET_NAME,
     STAGING_DATASET_NAME,
     FACT_TABLE_PREFIX,
+    dflt_project: "preston-307021",
+    marketting_ds: "ds_dbi_marketing",
+    data_prp_ds: "ds_dbi_dataprep",
+    insight_ds: "us_dataset"
 };
