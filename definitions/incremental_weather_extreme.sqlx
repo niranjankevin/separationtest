@@ -1,39 +1,47 @@
 config {
-  type: "incremental", // Changed to incremental for pre_operations logic
-  database: dataform.projectConfig.vars.weather_export_project,
-  schema: constants.baseSchema("weather"),
-  name: `${constants.FACT_TABLE_PREFIX}weather_line_items1`
-
+    type: "incremental",
+    tags: ["daily_weather_reports_incremental"], 
+    database: dataform.projectConfig.vars.weather_export_project,
+    schema: constants.baseSchema("weather"),
+    name: `${constants.FACT_TABLE_PREFIX}weather_aggregation`
 }
 
 js {
-  const constants = require("includes/constants.js");
+    const constants = require("includes/constants"); 
 }
 
 pre_operations {
-  ${when(incremental(), `
-    DELETE FROM ${self()}
-    WHERE
-      DATE(date) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL ${dataform.projectConfig.vars.weather_data_lookback_days} DAY)
-      AND CURRENT_DATE();
-  `)}
+    -- For the initial run, use "Run with Full refresh" for case where the table does not exist, the DELETE will be skipped.
+    ${
+        when(incremental(), `
+        DELETE FROM ${self()}
+        WHERE
+          DATE(date) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL ${dataform.projectConfig.vars.weather_data_lookback_days} DAY)
+          AND CURRENT_DATE();
+      `)
+    }
 }
 
+-- For the initial run, use "Run with Full refresh" where the incremental logic will be skipped 
 SELECT
-    DATE_TRUNC(DATE(year, month, day), MONTH) AS date,
-    COUNT(*) AS extreme_weather_count
+  DATE_TRUNC(DATE(year, month, day), MONTH) AS date,
+  COUNT(*) AS extreme_weather_count
 FROM
-    `bigquery-public-data.samples.gsod`
+  `bigquery-public-data.samples.gsod`
 WHERE
-    (
-        snow = TRUE
-        OR hail = TRUE
-        OR thunder = TRUE
-        OR tornado = TRUE
-    ) -- The GitHub data only ranges from 2007 to 2012.
-    -- The weather data is only available up to 2010.
-    AND year >= 2007
+  ( snow = TRUE
+    OR hail = TRUE
+    OR thunder = TRUE
+    OR tornado = TRUE )
+  AND year >= 2007
+  ${
+      when(incremental(), `
+        AND DATE_TRUNC(DATE(year, month, day), MONTH) > (SELECT MAX(date) FROM ${self()})
+      `)
+  }
 GROUP BY
-    date
+  date
 ORDER BY
-    date
+  date
+
+

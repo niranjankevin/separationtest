@@ -1,5 +1,6 @@
 config {
   type: "table", 
+  tags: "daily_reports_table",
   database: dataform.projectConfig.vars.weather_export_project,  
   schema: constants.baseSchema("weather"),
   name: `${constants.FACT_TABLE_PREFIX}weather_line_items`
