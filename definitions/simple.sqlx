@@ -1,0 +1,9 @@
+config {
+  type: "view",
+  name: "test_view"
+}
+js {
+  const constants = require("includes/constants.js");
+}
+SELECT 1 AS test_column,
+       constants.RAW_DATASET_NAME AS raw_dataset_name

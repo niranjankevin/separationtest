@@ -10,5 +10,6 @@ dataformCoreVersion: 3.0.0
     "weather_export_table_suffix": "_v1",
     "start_date": "2023-01-01",
     "end_date": "2023-12-31",
-    "output_table_partition_field": "event_date"
+    "output_table_partition_field": "event_date",
+    "weather_data_lookback_days": "7"
     } 
