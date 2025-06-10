@@ -2,7 +2,8 @@ config {
   type: "table", 
   database: dataform.projectConfig.vars.weather_export_project,  
   schema: constants.baseSchema("weather"),
-  name: 'events' + dataform.projectConfig.vars.weather_export_table_suffix
+  name: `${constants.FACT_TABLE_PREFIX}weather_line_items`
+  //name: 'events' + dataform.projectConfig.vars.weather_export_table_suffix
 }
 
 SELECT
